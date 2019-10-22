@@ -8,8 +8,14 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
+    const product= {
+        name: req.body.name,
+        //how do we know? as we create we have to document so it is known
+        price: req.body.price
+    }
 	res.status(201).json({
-		message: 'handling  Post request to Product',
+        message: 'handling  Post request to Product',
+        createdProduct: product
 	});
 });
 

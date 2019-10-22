@@ -8,8 +8,15 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
+    const order = {
+        productId: req.body.productId,
+        quantity: req.body.quantity
+
+
+    }
 	res.status(201).json({
-		message: 'orders was created',
+        message: 'orders was created',
+        quantity:order
 	});
 });
 
@@ -31,3 +38,7 @@ router.delete('/:orderId', (req, res, next) => {
 module.exports = router;
 
 // morgan is logging package for nodejs
+
+// CORS is Cross Origin Resource Sharing
+// We can disable by sending some header from the server to the client
+// that tells the browser which is running out client application, its okey u can have access
