@@ -15,6 +15,7 @@ app.use(bodyParser.json())
 // which header may be sent along with the request?
 //Orign, X-Requested-With,Content-Type, Accept, Authorization
 
+
 app.use((req,res,next)=>{
     res.header ('Access-Control-Allow-Origin','*');
     res.header('Access-Control-Allow-Origin','Orign, X-Requested-With,Content-Type, Accept, Authorization')
