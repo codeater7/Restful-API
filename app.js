@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan')
 const bodyParser = require('body-parser');
+const mongoose= require('mongoose')
 
 //Routes
 const productRoutes= require('./api/routes/product')
@@ -34,8 +35,14 @@ next();
 app.use('/products', productRoutes)
 app.use('/orders', orderRoutes)
 
+mongoose.connect('mongodb+srv://sujan:Mongo123db!@cluster0-hb41h.mongodb.net/test?retryWrites=true&w=majority', { 
+    useNewUrlParser: true
+})
+//under the hood use of mongoClient is ok
+
+
 // this above 2 lines or say middleware will lead to other so error handling will be nice 
-//like as below
+
 
 app.use((req,res,next)=>{
    const error = new Error('Not Found'); // we create error and we forward
