@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan')
 const bodyParser = require('body-parser');
-const mongoose= require('mongoose')
+const mongoose= require('mongoose');
 
 //Routes
 const productRoutes= require('./api/routes/product')
@@ -35,7 +35,7 @@ next();
 app.use('/products', productRoutes)
 app.use('/orders', orderRoutes)
 
-mongoose.connect('mongodb+srv://sujan:Mongo123db!@cluster0-hb41h.mongodb.net/test?retryWrites=true&w=majority', { 
+mongoose.connect('mongodb+srv://sujan:password134@cluster0-hb41h.mongodb.net/test?retryWrites=true&w=majority', { 
     useNewUrlParser: true
 })
 //under the hood use of mongoClient is ok
