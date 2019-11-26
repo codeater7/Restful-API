@@ -6,23 +6,19 @@ const mongoose = require('mongoose');
 const Product = require('../models/product');
 
 router.get('/', (req, res, next) => {
-
 	Product.find()
 		.exec()
-		.then(docs =>{
+		.then(docs => {
 			console.log(docs);
-			res.status(200).json(docs)
+			res.status(200).json(docs);
 		})
-		.catch(err =>{
+		.catch(err => {
 			console.log(err);
 			res.status(500).json({
-				error:err
-			})
-		})
-	
-	});
-;
-
+				error: err,
+			});
+		});
+});
 router.post('/', (req, res, next) => {
 	// const product= {
 	//     name: req.body.name,
@@ -39,20 +35,18 @@ router.post('/', (req, res, next) => {
 		.save()
 		.then(result => {
 			console.log(result);
-			
+
 			//good result aayo so we want to respond
 			res.status(201).json({
-				message:"handling POST requests to /products",
-				createdProduct:result
+				message: 'handling POST requests to /products',
+				createdProduct: result,
 			});
-
-			
 		})
 		.catch(err => {
 			console.log(err);
 
 			//bad aayo so we want to make it erroe
-			res.status(500).json ({error:err})
+			res.status(500).json({ error: err });
 		});
 	// save() method provided by mongoose and we have to use it after creating
 	//WORKFLeOW: create the schema and bring it here
@@ -71,13 +65,11 @@ router.get('/:productId', (req, res, next) => {
 			console.log('from database', doc);
 
 			//sometimes tehere wil be also good object but not from our database so we need to do the following
-			if (doc){
-				res.status(200).json(doc)
-			}else{
-				res.status(404).json({message:'No valid entry found for the provided id'})
+			if (doc) {
+				res.status(200).json(doc);
+			} else {
+				res.status(404).json({ message: 'No valid entry found for the provided id' });
 			}
-			
-
 		})
 		.catch(err => {
 			console.log(err);
@@ -98,34 +90,35 @@ router.get('/:productId', (req, res, next) => {
 // });
 
 router.patch('/:productId', (req, res, next) => {
-	const id = req.params.productId
-	const updateOps = { };
+	const id = req.params.productId;
+	const updateOps = {};
 
-	for (const ops of req.body){
+	for (const ops of req.body) {
 		updateOps[ops.propName] = ops.value;
 	}
-	Product.update({_id: id }, {$set:updateOps}).exec()
-	.then(result =>{
-		res.send(200).json(result);
-	}
-	).catch( err => {
-		console.log(err)
-		res.send(500).json({error:err})
-	});
-})
+	Product.update({ _id: id }, { $set: updateOps })
+		.exec()
+		.then(result => {
+			res.send(200).json(result);
+		})
+		.catch(err => {
+			console.log(err);
+			res.send(500).json({ error: err });
+		});
+});
 
 router.delete('/:productId', (req, res, next) => {
 	const id = req.params.productId;
-	Product.remove({ _id:id}).exec()
-	.then (
-		result=>{ res. status(200).json(result)})
-
-	.catch(err =>{
-		console.log(err);
-			res.status(500).json({error:err})
+	Product.remove({ _id: id })
+		.exec()
+		.then(result => {
+			res.status(200).json(result);
 		})
 
-
+		.catch(err => {
+			console.log(err);
+			res.status(500).json({ error: err });
+		});
 });
 
 module.exports = router;
