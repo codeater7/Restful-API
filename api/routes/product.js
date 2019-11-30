@@ -63,6 +63,7 @@ router.get('/:productId', (req, res, next) => {
 		.exec()
 		.then(doc => {
 			console.log('from database', doc);
+			
 
 			//sometimes tehere wil be also good object but not from our database so we need to do the following
 			if (doc) {
