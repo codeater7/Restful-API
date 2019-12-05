@@ -101,7 +101,7 @@ router.get('/:productId', (req, res, next) => {
 					request:{
 						type: 'GET',
 						description: 'Get all products',
-						url:' http://localhost/products'
+						url:' http://localhost:3000/products'
 					}
 				});
 			} else {
@@ -127,6 +127,7 @@ router.get('/:productId', (req, res, next) => {
 // });
 
 
+
 router.patch('/:productId', (req, res, next) => {
 	const id = req.params.productId;
 	const updateOps = {};
@@ -141,7 +142,7 @@ router.patch('/:productId', (req, res, next) => {
 				message:'Product updated',
 				request:{
 					type: 'GET',
-					url:'http://localhost/products/'+ id
+					url:'http://localhost:3000/products/'+ id
 				}
 			});
 		})
@@ -154,6 +155,7 @@ router.patch('/:productId', (req, res, next) => {
 router.delete('/:productId', (req, res, next) => {
 	const id = req.params.productId;
 	Product.remove({ _id: id })
+	
 		.exec()
 		.then(result => {
 			res.status(200).json(result);
