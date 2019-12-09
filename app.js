@@ -36,8 +36,13 @@ app.use('/products', productRoutes)
 app.use('/orders', orderRoutes)
 
 mongoose.connect('mongodb+srv://sujan:password134@cluster0-hb41h.mongodb.net/test?retryWrites=true&w=majority', { 
-    useNewUrlParser: true
+    useNewUrlParser: true,
+     useUnifiedTopology: true 
+    ,
+    
 })
+//use default global implementation from node rather than from the mongoose
+mongoose.Promise= global.Promise;
 //under the hood use of mongoClient is ok
 
 
