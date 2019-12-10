@@ -4,11 +4,18 @@ const morgan = require('morgan')
 const bodyParser = require('body-parser');
 const mongoose= require('mongoose');
 
+
+// Multer will ( like boy parser) parse form data bodies
+
 //Routes
 const productRoutes= require('./api/routes/product')
 const orderRoutes= require('./api/routes/orders')
 
 app.use(morgan('dev'));
+// to make the app puböicly available
+// /uploads, it us only used to only parse request to this link but will ignore that part
+
+app.use( '/uploads', express.static('uploads'));
 // use body parser but for what kind, true allows to parse extended bodies, false to only simple body
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(bodyParser.json())
