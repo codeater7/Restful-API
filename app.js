@@ -10,6 +10,7 @@ const mongoose= require('mongoose');
 //Routes
 const productRoutes= require('./api/routes/product')
 const orderRoutes= require('./api/routes/orders')
+const userRoutes= require('./api/routes/user')
 
 app.use(morgan('dev'));
 // to make the app puböicly available
@@ -41,6 +42,7 @@ next();
 
 app.use('/products', productRoutes)
 app.use('/orders', orderRoutes)
+app.use('/user',  userRoutes )
 
 mongoose.connect('mongodb+srv://sujan:password134@cluster0-hb41h.mongodb.net/test?retryWrites=true&w=majority', { 
     useNewUrlParser: true,
