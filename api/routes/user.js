@@ -114,7 +114,7 @@ router.post("/login", (req, res, next)=>{
                     // return res.status(200).json({
                     //     message:'Auth Successful',
                     //     token:token})
-                    
+
                 }
             
                 
@@ -144,3 +144,7 @@ router.delete('/:userId', (req, res, next)=>{
 module.exports = router;
 
 // --save will add the entry to packagae.json
+
+// we can protect route from the token that was generated
+// We can store that token on client, with that token we can access certain route
+//
