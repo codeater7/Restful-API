@@ -83,7 +83,8 @@ router.post('/login', (req, res, next) => {
 	User.find({ email: req.body.email })
 		.exec()
 		// users will be empty array
-		// finding the user
+        // to find the user
+        
 		.then(user => {
             console.log(user)
             console.log(user[0].password)
