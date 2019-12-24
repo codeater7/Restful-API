@@ -90,6 +90,7 @@ router.post('/login', (req, res, next) => {
             console.log(user[0].password)
             console.log(req.body.password)
             if (user.length < 1) {
+                
 				
 				return res.status(401).json({ message: 'Auth Failed' });
 			}

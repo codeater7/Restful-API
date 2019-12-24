@@ -35,6 +35,7 @@ router.get('/', (req, res, next) => {
 		});
 });
 
+
 router.post('/', (req, res, next) => {
 	// if we dont search for the the productId in product file, randomly we can make order where there is no product, so to minimise that
 	// we search for the productID
@@ -45,6 +46,7 @@ router.post('/', (req, res, next) => {
 				message: 'product not found',
 			});
 		}
+		
 		const order = new Order({
 			_id: mongoose.Types.ObjectId(),
 			quantity: req.body.quantity,
