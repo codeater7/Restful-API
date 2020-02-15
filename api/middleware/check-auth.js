@@ -1,24 +1,26 @@
-const jwt = require('jsonwebtoken')
-module.exports = (req, res, next)=>{
-    //docode method will only decode the token but not verify
-    //token is not encripted
-    // decode is only useful if only we want to get into the internals of the token after having verified it
-    
-    //Rule of thumb is that first of all verify and decode
-    try {
-    const decoded = jwt.verify(req.body.token, process.env.JWT_KEY);
-    req.userData = decoded;
+const jwt = require('jsonwebtoken');
+module.exports = (req, res, next) => {
+	//docode method will only decode the token but not verify
+	//token is not encripted
+	// decode is only useful if only we want to get into the internals of the token after having verified it
 
-    next()
+	//Rule of thumb is that first of all verify and decode
 
-    } catch(error){
-        return res.status(401).json({
-            message:'Auth Failed'
-        })
-    }
-    
+	try {
+        const token = req.headers.authorization.split(" ")[1];
+        
+        console.log("token from check-auth",token);
+        
+		const decoded = jwt.verify(token, process.env.JWT_KEY);
+		req.userData = decoded;
 
-}
-//verify the incoming token 
+		next();
+	} catch (error) {
+		return res.status(401).json({
+			message: 'Auth Failed',
+		});
+	}
+};
+//verify the incoming token
 //the server can verify the token whoever is valid or not
 // we need secret or Public Key on the server and we need the token

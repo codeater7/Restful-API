@@ -21,11 +21,16 @@ function fileFilter(req, file, cb) {
 	}
 }
 
-const upload = multer({ storage: storage, limits: { fileSize: 1024 * 1024 * 5 }, fileFilter: fileFilter });
+const upload = multer({ 
+	storage: storage, 
+	limits: {fileSize: 1024 * 1024 * 5 }, 
+	fileFilter: fileFilter });
 
 // import the schema, and we want to create the real objects from here so, it is like constructor
 const Product = require('../models/product');
 
+
+// GET ALL THE LIST
 router.get('/', (req, res, next) => {
 	Product.find()
 		.select('name price _id productImage') // it will only fetch these fields
@@ -48,6 +53,7 @@ router.get('/', (req, res, next) => {
 					};
 				}),
 			};
+			// id (docs.lenght >= 0)
 			res.status(200).json(response);
 		})
 		.catch(err => {
@@ -59,7 +65,9 @@ router.get('/', (req, res, next) => {
 });
 // upload == the middleware (multer)
 //checkAuth
-router.post('/', checkAuth, upload.single('productImage'), (req, res, next) => {
+
+// POST 
+router.post('/',checkAuth, upload.single('productImage'),(req, res, next) => {
 	// in the post we have to use the schema, instiantiate the new one
 	const product = new Product({
 		_id: new mongoose.Types.ObjectId(),
@@ -67,20 +75,18 @@ router.post('/', checkAuth, upload.single('productImage'), (req, res, next) => {
 		price: req.body.price,
 		productImage: req.file.path,
 	});
-
 	product
 		.save()
 		.then(result => {
 			console.log(result);
 
 			res.status(201).json({
-				message: 'handling POST requests to /products',
-
+				message: 'Created product successfully',
 				createdProduct: {
-					_id: result.id,
+					_id: result._id,
 					name: result.name,
 					price: result.price,
-					
+
 					request: {
 						type: 'GET',
 						url: 'http://localhost:3000/products/' + result._id,
@@ -91,11 +97,9 @@ router.post('/', checkAuth, upload.single('productImage'), (req, res, next) => {
 		.catch(err => {
 			res.status(500).json({ error: err });
 		});
-		res.status(201).json({
-			message: 'handling  Post request to Product',
-			createdProduct: product,
-		})
 });
+
+//GET INDIVIDUAL ITEM
 
 router.get('/:productId', (req, res, next) => {
 	const id = req.params.productId; // extract the ID
@@ -125,17 +129,7 @@ router.get('/:productId', (req, res, next) => {
 		});
 });
 
-// 	if (id == 'special') {
-// 		res.status(200).json({
-// 			message: 'discovered SPECIAL id',
-// 			id: id,
-// 		});
-// 	} else {
-// 		res.status(200).json({
-// 			message: 'u passed an id',
-// 		});
-// 	}
-// });
+
 
 router.patch('/:productId', (req, res, next) => {
 	const id = req.params.productId;
@@ -161,6 +155,8 @@ router.patch('/:productId', (req, res, next) => {
 		});
 });
 
+
+// DELETE
 router.delete('/:productId', (req, res, next) => {
 	const id = req.params.productId;
 	Product.remove({ _id: id })
@@ -169,8 +165,11 @@ router.delete('/:productId', (req, res, next) => {
 		.then(result => {
 			res.status(200).json({
 				message: 'Product deleted',
-				url: 'http://localhost:3000/products',
-				body: { name: 'String', price: 'Number' },
+				request:{
+					type:"POST",
+					url: 'http://localhost:3000/products',
+					body: { name: 'String', price: 'Number' },
+				}
 			});
 		})
 
@@ -181,3 +180,17 @@ router.delete('/:productId', (req, res, next) => {
 });
 
 module.exports = router;
+
+// 	if (id == 'special') {
+// 		res.status(200).json({
+// 			message: 'discovered SPECIAL id',
+// 			id: id,
+// 		});
+// 	} else {
+// 		res.status(200).json({
+// 			message: 'u passed an id',
+// 		});
+// 	}
+// });
+
+// EDIT

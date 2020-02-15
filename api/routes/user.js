@@ -7,6 +7,110 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 
+router.post('/signup', (req, res, next) => {
+	// But we need to find the if the email already exists or not
+	User.find({ email: req.body.email })
+		.exec()
+		// We do we get mail exists even if the mail does not exists??
+		// In above case it is never going to be null so, it says mail exists
+		// instead we need to check the length
+		// below user wull be the array we get
+		.then(user => {
+			if (user.length >= 1) {
+				return res.status(409).json({ message: 'Mail exists' });
+			} else {
+				bcrypt.hash(req.body.password, 10,(err, hash) => {
+					if (err) {
+						res.status(500).json({ error: err });
+					} else {
+						const user = new User({
+							_id: new mongoose.Types.ObjectId(),
+							email: req.body.email,
+							password: hash,
+						});
+						user.save()
+							.then(result => {
+								console.log(result);
+								res.status(201).json({ message: 'USer Created' });
+							})
+							.catch(err => {
+								res.status(500).json({ error: err });
+							});
+					}
+				});
+			}
+		});
+});
+
+router.post('/login', (req, res, next) => {
+	User.find({ email: req.body.email })
+		.exec()
+		// users will be empty array
+		// to find the user
+		.then(user => {
+			
+			if (user.length < 1) {
+				return res.status(401).json({ message: 'Mail not found' });
+			}
+			// documentation
+			bcrypt.compare(req.body.password, user[0].password, (err, result) => {
+				if (err) {
+					return res.status(401).json({ message: 'what the fuck, i strucked indise teh if st. of bcrypt' });
+				}
+
+				if (result) {
+					const token = jwt.sign(
+						{
+							email: user[0].email,
+							userId: user[0]._id,
+						},
+						process.env.JWT_KEY,
+						{
+							expiresIn: '1hr',
+						}
+					);
+
+					return res.status(200).json({
+						message: 'Auth Successful',
+						token: token,
+					});
+
+					// // See documentation
+					// const token= jwt.sign({email:user[0].email, userId:user[0]._id},
+					//           process.env.JWT_KEY, {expiresIn:"1hr"} );
+					// return res.status(200).json({
+					//     message:'Auth Successful',
+					//     token:token})
+				}
+
+				res.status(401).json({ message: 'failed at the end aha' });
+			});
+		})
+		.catch(err => {
+			console.log(err);
+			res.status(500).json({ error: err });
+		});
+});
+
+router.delete('/:userId', (req, res, next) => {
+	User.remove({ _id: req.params.userId }) // What is encoded in url, so it is above userID
+		.exec()
+		.then(result => {
+			res.status(200).json({ message: 'User Deleted' });
+		})
+		.catch(err => {
+			res.status(500).json({ error: err });
+		});
+});
+
+module.exports = router;
+
+// --save will add the entry to packagae.json
+
+// we can protect route from the token that was generated
+// We can store that token on client, with that token we can access certain route
+//
+
 // Json Web token
 // it will do token generation and signing
 
@@ -42,101 +146,3 @@ const User = require('../models/user');
 //     };
 
 // }
-
-router.post('/signup', (req, res, next) => {
-	// But we need to find the if the email already exists or not
-	User.find({ email: req.body.email })
-		.exec()
-		// We do we get mail exists even if the mail does not exists??
-		// In above case it is never going to be null so, it says mail exists
-		// instead we need to check the length
-		// below user wull be the array we get
-		.then(user => {
-			if (user.length >= 1) {
-				return res.status(409).json({ message: 'Mail exists' });
-			} else {
-				bcrypt.hash(req.body.email, 10, (err, hash) => {
-					if (err) {
-						res.status(500).json({ error: err });
-					} else {
-						const user = new User({
-							_id: new mongoose.Types.ObjectId(),
-							email: req.body.email,
-							password: hash,
-						});
-						user.save()
-							.then(result => {
-								console.log(result);
-								res.status(201).json({ message: 'USer Created' });
-							})
-							.catch(err => {
-								res.status(500).json({ error: err });
-							});
-					}
-				});
-			}
-		});
-});
-
-router.post('/login', (req, res, next) => {
-	
-	User.find({ email: req.body.email })
-		.exec()
-		// users will be empty array
-        // to find the user
-        
-		.then(user => {
-            console.log(user)
-            console.log(user[0].password)
-            console.log(req.body.password)
-            if (user.length < 1) {
-                
-				
-				return res.status(401).json({ message: 'Auth Failed' });
-			}
-			// documentation
-			bcrypt.compare(req.body.password, user[0].password, (err, result) => {
-                
-				if (err) {
-					return res.status(401).json({ message: 'Auth failed' });
-                }
-                console.log('i come up to here')
-				if (result) {
-                    
-					return res.status(200).json({ message: 'Auth Successful' });
-
-					// // See documentation
-					// const token= jwt.sign({email:user[0].email, userId:user[0]._id},
-					//           process.env.JWT_KEY, {expiresIn:"1hr"} );
-					// return res.status(200).json({
-					//     message:'Auth Successful',
-					//     token:token})
-				}
-                
-				res.status(401).json({ message: 'Auth failed' });
-			});
-		})
-		.catch(err => {
-            console.log(err)
-			res.status(500).json({ error: err });
-		});
-});
-
-router.delete('/:userId', (req, res, next) => {
-	User.remove({ _id: req.params.userId }) // What is encoded in url, so it is above userID
-		.exec()
-		.then(result => {
-			res.status(200).json({ message: 'User Deleted' });
-		})
-		.catch(err => {
-			res.status(500).json({ error: err });
-		});
-});
-
-module.exports = router;
-
-// --save will add the entry to packagae.json
-
-// we can protect route from the token that was generated
-// We can store that token on client, with that token we can access certain route
-//
