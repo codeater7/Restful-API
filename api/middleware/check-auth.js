@@ -9,9 +9,13 @@ module.exports = (req, res, next) => {
 	try {
         const token = req.headers.authorization.split(" ")[1];
         
-        console.log("token from check-auth",token);
-        
-		const decoded = jwt.verify(token, process.env.JWT_KEY);
+		// console.log("token from check-auth",token);
+		// console.log("jwt token", process.env.JWT_KEY)
+		
+		// token generally comes from the headers.authorizarion so we dont send from the req.body  [ authorization  bearer ndkalfnakn]
+		
+		// const decoded = jwt.verify(req.body.token, process.env.JWT_KEY);
+		const decoded = jwt.verify(token, Secret);
 		req.userData = decoded;
 
 		next();
@@ -24,3 +28,19 @@ module.exports = (req, res, next) => {
 //verify the incoming token
 //the server can verify the token whoever is valid or not
 // we need secret or Public Key on the server and we need the token
+
+
+// const jwt = require('jsonwebtoken');
+
+// module.exports = (req, res, next) => {
+//     try {
+//         const token = req.headers.authorization.split(" ")[1];
+//         const decoded = jwt.verify(token, process.env.JWT_KEY);
+//         req.userData = decoded;
+//         next();
+//     } catch (error) {
+//         return res.status(401).json({
+//             message: 'auth failed'
+//         });
+//     }
+// };

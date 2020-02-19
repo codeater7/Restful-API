@@ -12,6 +12,18 @@ const productRoutes= require('./api/routes/product')
 const orderRoutes= require('./api/routes/orders')
 const userRoutes= require('./api/routes/user')
 
+// mongoose.connect('mongodb+srv://sujan:password134@cluster0-hb41h.mongodb.net/test?retryWrites=true&w=majority', { 
+mongoose.connect('mongodb+srv://sujan:password134@cluster0-hb41h.mongodb.net/test?retryWrites=true&w=majority', { 
+    // useMongoClient: true
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+    
+})
+//use default global implementation from node rather than from the mongoose
+mongoose.Promise= global.Promise;
+//under the hood use of mongoClient is ok
+
+
 app.use(morgan('dev'));
 // to make the app puböicly available
 // /uploads, it us only used to only parse request to this link but will ignore that part
@@ -44,23 +56,21 @@ app.use('/products', productRoutes)
 app.use('/orders', orderRoutes)
 app.use('/user',  userRoutes )
 
-mongoose.connect('mongodb+srv://sujan:password134@cluster0-hb41h.mongodb.net/test?retryWrites=true&w=majority', { 
-    useNewUrlParser: true,
-     useUnifiedTopology: true 
-    ,
+// mongoose.connect('mongodb+srv://sujan:password134@cluster0-hb41h.mongodb.net/test?retryWrites=true&w=majority', { 
+//     useMongoClient: true
     
-})
-//use default global implementation from node rather than from the mongoose
-mongoose.Promise= global.Promise;
-//under the hood use of mongoClient is ok
+// })
+// //use default global implementation from node rather than from the mongoose
+// mongoose.Promise= global.Promise;
+// //under the hood use of mongoClient is ok
 
 
-// this above 2 lines or say middleware will lead to other so error handling will be nice 
+// // this above 2 lines or say middleware will lead to other so error handling will be nice 
 
 
 app.use((req,res,next)=>{
    const error = new Error('Not Found'); // we create error and we forward
-   error.status = 400;
+   error.status = 404;
    next(error)               
 })
 
