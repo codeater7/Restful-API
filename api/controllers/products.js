@@ -38,6 +38,7 @@ exports.products_get_all = (req, res, next) => {
 
 // POST 
 // in the post we have to use the schema, instiantiate the new one
+
 exports.products_post =  (req, res, next) => {
 	const product = new Product({
 		_id: new mongoose.Types.ObjectId(),
@@ -71,7 +72,7 @@ exports.products_post =  (req, res, next) => {
 
 
 exports.products_get_single= ( req, res, next) => {
-	const id = req.params.productId; // extract the ID
+	const id = req.params.productId // extract the ID
 	Product.findById(id)
 		.select('name price_id productImage')
 		.exec()
@@ -99,7 +100,7 @@ exports.products_get_single= ( req, res, next) => {
 };
 
 
-exports.products_update = (checkAuth, (req, res, next) => {
+exports.products_update = (req, res, next) => {
 	const id = req.params.productId;
 	const updateOps = {};
 
@@ -121,14 +122,13 @@ exports.products_update = (checkAuth, (req, res, next) => {
 			console.log(err);
 			res.send(500).json({ error: err });
 		});
-});
+};
 
 
 
-exports.products_delete = checkAuth,(req, res, next) => {
+exports.products_delete = (req, res, next) => {
 	const id = req.params.productId;
-	Product.remove({ _id: id })
-
+	Product.remove({ _id:id })
 		.exec()
 		.then(result => {
 			res.status(200).json({

@@ -5,16 +5,16 @@ const checkAuth = require('../middleware/check-auth')
 
 const  OrdersContoller = require('../controllers/orders')
 //Dont call just a reference
-router.get('/', OrdersContoller.orders_get_all) ;
+router.get('/',checkAuth, OrdersContoller.orders_get_all) ;
 
 
-router.post('/' ,OrdersContoller.orders_create_order)
+router.post('/' ,checkAuth, OrdersContoller.orders_create_order)
 
-router.get('/:orderId', OrdersContoller.orders_get_one)
+router.get('/:orderId', checkAuth, OrdersContoller.orders_get_one)
 
-router.patch('/:orderId', OrdersContoller.orders_patch )
 
-router.delete('/:orderId', OrdersContoller.orders_delete)
+
+router.delete('/:orderId', checkAuth, OrdersContoller.orders_delete)
 
 module.exports = router;
 

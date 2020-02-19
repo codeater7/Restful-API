@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-
 const multer = require('multer');
 const checkAuth = require('../middleware/check-auth');
 
@@ -25,12 +24,13 @@ function fileFilter(req, file, cb) {
 
 const upload = multer({
 	storage: storage,
-	limits: { fileSize: 1024 * 1024 * 5 },
+	limits: {
+		 fileSize: 1024 * 1024 * 5 
+		},
 	fileFilter: fileFilter,
 });
 
-// import the schema, and we want to create the real objects from here so, it is like constructor
-const Product = require('../models/product');
+
 
 // GET ALL THE LIST
 router.get('/', ProductsController.products_get_all);
@@ -42,22 +42,10 @@ router.post('/', checkAuth, upload.single('productImage'), ProductsController.pr
 
 router.get('/:productId', ProductsController.products_get_single);
 
-router.patch('/:productId', ProductsController.products_update);
+router.patch('/:productId',checkAuth, ProductsController.products_update);
 
-router.delete('/:productId', ProductsController.products_delete);
+router.delete('/:productId', checkAuth, ProductsController.products_delete);
 
 module.exports = router;
 
-// 	if (id == 'special') {
-// 		res.status(200).json({
-// 			message: 'discovered SPECIAL id',
-// 			id: id,
-// 		});
-// 	} else {
-// 		res.status(200).json({
-// 			message: 'u passed an id',
-// 		});
-// 	}
-// });
 
-// EDIT

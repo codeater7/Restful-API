@@ -9,10 +9,10 @@ exports.user_signup = (req, res, next) => {
 	// But we need to find the if the email already exists or not
 	User.find({ email: req.body.email })
 		.exec()
-		// We do we get mail exists even if the mail does not exists??
+		// we get mail exists even if the mail does not exists??
 		// In above case it is never going to be null so, it says mail exists
 		// instead we need to check the length
-		// below user wull be the array we get
+		// below user will be the array we get
 		.then(user => {
 			if (user.length >= 1) {
 				return res.status(409).json({ message: 'Mail exists' });
