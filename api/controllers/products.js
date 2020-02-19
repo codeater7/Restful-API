@@ -44,6 +44,7 @@ exports.products_post =  (req, res, next) => {
 		_id: new mongoose.Types.ObjectId(),
 		name: req.body.name,
 		price: req.body.price,
+		describe:req.body.describe,
 		productImage: req.file.path,
 	});
 	product
@@ -57,6 +58,8 @@ exports.products_post =  (req, res, next) => {
 					_id: result._id,
 					name: result.name,
 					price: result.price,
+					describe:result.describe,
+					productImage: req.file.path,
 					
 					request: {
 						type: 'GET',
